@@ -3,37 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local Storage</title>
+    <title>Single Name</title>
+    <!-- Bootstrap CSS Link -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h2>Local Storage</h2>
-    <input type="text" id="nameInput" placeholder="Enter your name">
-    <button onclick="saveName()">Save Name</button>
-    <button onclick="getName()">Get Name</button>
-    <button onclick="clearStorage()">Clear Storage</button>
-    <p id="output"></p>
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h4 class="card-title" >Local Storage Example</h4>
+                <div class="form-group">
+                    <label for="username">Name:</label>
+                    <input type="text" class="form-control" placeholder="Enter your Name here..." id="username">
+                </div>
+                <div>
+                    <p id="output"></p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="saveName()">Save Name</button>
+                    <button class="btn btn-info" onclick="getName()">Get Name</button>
+                    <button class="btn btn-danger" onclick="clearStorage()">Clear Name</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function saveName() {
-            let name = document.getElementById("nameInput").value;
+        function saveName(){
+            let name = document.getElementById("username").value;
             localStorage.setItem("username", name);
-            alert("Name saved in Local Storage!");
+            alert("Name Saved in Local Storage..!!!");
         }
 
-        function getName() {
-            let storedName = localStorage.getItem("username");
-            if (storedName) {
-                document.getElementById("output").innerText = "Stored Name: " + storedName;
+        function getName(){
+            let savedUsername = localStorage.getItem("username");
+            if(savedUsername){
+                document.getElementById("output").innerText = "Stored Name: " + savedUsername;
             } else {
-                document.getElementById("output").innerText = "No name found!";
+                document.getElementById("output").innerText = "No Name found...!!!";
             }
         }
 
-        function clearStorage() {
-            localStorage.removeItem("username"); // or use localStorage.clear() to remove all items
-            alert("Local Storage cleared!");
-            document.getElementById("output").innerText = "";
+        function clearStorage(){
+            localStorage.clear();
+            alert("Local Storage Cleared!!");
         }
     </script>
+    
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
