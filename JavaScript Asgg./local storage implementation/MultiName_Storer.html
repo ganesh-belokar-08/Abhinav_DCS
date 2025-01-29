@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Names in Local Storage</title>
+    <!-- Bootstrap CSS Link -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h4 class="card-title">Local Storage Multiple Names</h4>
+                <div class="form-group">
+                    <label for="username">Name:</label>
+                    <input type="text" class="form-control" placeholder="Enter a Name here..." id="username">
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="saveName()">Save Name</button>
+                    <button class="btn btn-info" onclick="getNames()">Show Stored Names</button>
+                    <button class="btn btn-danger" onclick="clearStorage()">Clear Storage</button>
+                </div>
+
+                <h4 class="mt-3">Stored Names</h4>
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sr. No.</th>
+                            <th scope="col">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="namesTable">
+                        <!--inserting dynamically-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        function saveName() {
+            let name = document.getElementById("username").value;
+            let storedNames = JSON.parse(localStorage.getItem("names")) || [];
+            storedNames.push(name);
+            localStorage.setItem("names", JSON.stringify(storedNames));
+            alert("Name Saved in Local Storage!");
+            document.getElementById("username").value = ""; // Clear input field
+        }
+
+        
+        function getNames() {
+            let storedNames = JSON.parse(localStorage.getItem("names")) || [];
+            let namesTable = document.getElementById("namesTable");
+            namesTable.innerHTML = ""; // Clear existing table rows
+
+            if (storedNames.length === 0) {
+                namesTable.innerHTML = "<tr><td colspan='2'>No names found...</td></tr>";
+            } else {
+                storedNames.forEach((name, index) => {
+                    let row = `<tr>
+                                <th scope="row">${index + 1}</th>
+                                <td>${name}</td>
+                               </tr>`;
+                    namesTable.innerHTML += row;
+                });
+            }
+        }
+
+        //clear Local Storage
+        function clearStorage() {
+            localStorage.removeItem("names");
+            alert("Local Storage Cleared!");
+            getNames(); // Update table
+        }
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
