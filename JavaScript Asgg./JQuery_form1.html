@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Form</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Product Input Form</h1>
+    <form id="productForm" class="form-container">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="productCode" class="form-label">Product Code</label>
+            <input type="text" class="form-control" id="productCode" placeholder="Enter Product Code" required>
+            <div class="invalid-feedback">Product Code must be numeric.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="productName" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="productName" placeholder="Enter Product Name" required>
+            <div class="invalid-feedback">Product Name is required.</div>
+          </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="productDescription" class="form-label">Product Description</label>
+            <textarea class="form-control" id="productDescription" rows="2" placeholder="Enter Product Description" required></textarea>
+            <div class="invalid-feedback">Description must be at least 10 characters long.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="pricePerMeter" class="form-label">Price Per Meter</label>
+            <input type="number" class="form-control" id="pricePerMeter" placeholder="Enter Price" required>
+            <div class="invalid-feedback">Price must be a positive number.</div>
+          </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="productType" class="form-label">Product Type</label>
+            <select class="form-select" id="productType" required>
+              <option value="" disabled selected>Select Type</option>
+              <option value="profile">Profile</option>
+              <option value="accessory">Accessory</option>
+            </select>
+            <div class="invalid-feedback">Product Type is required.</div>
+          </div>
+          <div class="col-md-6">
+            <div id="unitTypeContainer" style="display: none;">
+              <label for="unitType" class="form-label">Unit Type</label>
+              <select class="form-select" id="unitType">
+                <option value="" disabled selected>Select Unit</option>
+                <option value="length">Length</option>
+                <option value="pcs">Pcs</option>
+              </select>
+              <div class="invalid-feedback">Unit Type is required for accessories.</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="priceDropdown" class="form-label">Price (GST %)</label>
+            <select class="form-select" id="priceDropdown" required>
+              <option value="" disabled selected>Select GST %</option>
+              <option value="5">5%</option>
+              <option value="12">12%</option>
+              <option value="18">18%</option>
+              <option value="28">28%</option>
+            </select>
+            <div class="invalid-feedback">GST % is required.</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label d-block">Usage</label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="usage" id="optional" value="Optional" required>
+              <label class="form-check-label" for="optional">Optional</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="usage" id="mandatory" value="Mandatory">
+              <label class="form-check-label" for="mandatory">Mandatory</label>
+            </div>
+            <div class="invalid-feedback d-block" id="usageError">Usage is required.</div>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="reset" class="btn btn-secondary">Reset</button>
+          <button type="button" class="btn btn-danger" id="cancelButton">Cancel</button>
+        </div>
+      </form>
+    <hr>
+    <h3 class="text-center mt-4">Submitted Data</h3> <br>
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Serial No.</th>
+          <th>Product Code</th>
+          <th>Product Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Type</th>
+          <th>Unit</th>
+          <th>GST %</th>
+          <th>Usage</th>
+          <th>Total Price</th>
+        </tr>
+      </thead>
+      <tbody id="dataTable">
+        <!-- Dynamic rows will be added here -->
+      </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+    let serialNumber = 1;
+
+    // Enable/Disable Unit dropdown based on Product Type
+    $('#productType').change(function () {
+        if ($(this).val() === "accessory") {
+            $('#unitTypeContainer').show();
+        } else {
+            $('#unitTypeContainer').hide();
+            $('#unitType').val("");
+        }
+    });
+
+    // Form Submission
+    $('#productForm').submit(function (e) {
+        e.preventDefault();
+        let isValid = true;
+
+        function validateField(field, condition) {
+            if (condition) {
+                $(field).addClass("is-invalid");
+                isValid = false;
+            } else {
+                $(field).removeClass("is-invalid");
+            }
+        }
+
+        validateField('#productCode', !/^\d+$/.test($('#productCode').val()));
+        validateField('#productName', !$.trim($('#productName').val()));
+        validateField('#productDescription', $('#productDescription').val().length < 10);
+        validateField('#pricePerMeter', isNaN(parseFloat($('#pricePerMeter').val())) || parseFloat($('#pricePerMeter').val()) <= 0);
+        validateField('#productType', !$('#productType').val());
+        
+        if ($('#productType').val() === "accessory") {
+            validateField('#unitType', !$('#unitType').val());
+        }
+        
+        validateField('#priceDropdown', isNaN(parseFloat($('#priceDropdown').val())));
+        
+        if (!$('input[name="usage"]:checked').val()) {
+            $('#usageError').show();
+            isValid = false;
+        } else {
+            $('#usageError').hide();
+        }
+
+        if (!isValid) return;
+
+        let gstPercentage = parseFloat($('#priceDropdown').val());
+        let totalPrice = parseFloat($('#pricePerMeter').val()) * (1 + gstPercentage / 100);
+
+        let row = `<tr>
+            <td>${serialNumber++}</td>
+            <td>${$('#productCode').val()}</td>
+            <td>${$('#productName').val()}</td>
+            <td>${$('#productDescription').val()}</td>
+            <td>${parseFloat($('#pricePerMeter').val()).toFixed(2)}</td>
+            <td>${$('#productType').val()}</td>
+            <td>${$('#unitType').val() || "N/A"}</td>
+            <td>${gstPercentage}%</td>
+            <td>${$('input[name="usage"]:checked').val()}</td>
+            <td>${totalPrice.toFixed(2)}</td>
+        </tr>`;
+
+        $('#dataTable').append(row);
+        $('#productForm')[0].reset();
+        $('#unitTypeContainer').hide();
+        $('.is-invalid').removeClass("is-invalid");
+    });
+
+});
+</script>
+
+</body>
+</html>
