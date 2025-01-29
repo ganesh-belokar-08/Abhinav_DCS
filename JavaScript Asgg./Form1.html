@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Input Form</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+    }
+    .form-container {
+      margin-bottom: 20px;
+    }
+    .table-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Product Input Form</h1>
+    
+    <form id="productForm" class="form-container">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="productCode" class="form-label">Product Code</label>
+          <input type="text" class="form-control" id="productCode" placeholder="Enter Product Code" required>
+        </div>
+        <div class="col-md-6">
+          <label for="productName" class="form-label">Product Name</label>
+          <input type="text" class="form-control" id="productName" placeholder="Enter Product Name" required>
+        </div>
+      </div>
+      
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="productDescription" class="form-label">Product Description</label>
+          <textarea class="form-control" id="productDescription" rows="2" placeholder="Enter Product Description" required></textarea>
+        </div>
+        <div class="col-md-6">
+          <label for="pricePerMeter" class="form-label">Price Per Meter</label>
+          <input type="number" class="form-control" id="pricePerMeter" placeholder="Enter Price" required>
+        </div>
+      </div>
+      
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="productType" class="form-label">Product Type</label>
+          <select class="form-select" id="productType" required>
+            <option value="" disabled selected>Select Type</option>
+            <option value="profile">Profile</option>
+            <option value="accessory">Accessory</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="unitType" class="form-label">Unit Type</label>
+          <select class="form-select" id="unitType" disabled required>
+            <option value="" disabled selected>Select Unit</option>
+            <option value="length">Length</option>
+            <option value="pcs">Pcs</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="priceDropdown" class="form-label">Price (GST %)</label>
+          <select class="form-select" id="priceDropdown" required>
+            <option value="" disabled selected>Select GST %</option>
+            <option value="5%">5%</option>
+            <option value="12%">12%</option>
+            <option value="18%">18%</option>
+            <option value="28%">28%</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label d-block">Usage</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="usage" id="optional" value="Optional" required>
+            <label class="form-check-label" for="optional">Optional</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="usage" id="mandatory" value="Mandatory">
+            <label class="form-check-label" for="mandatory">Mandatory</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+        <button type="button" class="btn btn-danger" id="cancelButton">Cancel</button>
+      </div>
+    </form>
+    
+    <div class="table-container">
+      <h3>Submitted Data</h3>
+      <table class="table table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>Unit</th>
+            <th>GST %</th>
+            <th>Usage</th>
+          </tr>
+        </thead>
+        <tbody id="dataTable">
+          <!-- Data rendering -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const productForm = document.getElementById("productForm");
+    const productType = document.getElementById("productType");
+    const unitType = document.getElementById("unitType");
+    const dataTable = document.getElementById("dataTable");
+
+    // Show/Hide Unit Dropdown Based on Type
+    productType.addEventListener("change", () => {
+      if (productType.value === "accessory") {
+        unitType.disabled = false;
+      } else {
+        unitType.disabled = true;
+        unitType.value = "";
+      }
+    });
+
+    // Handle Form Submission
+    productForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      const productCode = document.getElementById("productCode").value;
+      const productName = document.getElementById("productName").value;
+      const productDescription = document.getElementById("productDescription").value;
+      const pricePerMeter = document.getElementById("pricePerMeter").value;
+      const productTypeValue = productType.value;
+      const unitTypeValue = unitType.value || "N/A";
+      const priceDropdown = document.getElementById("priceDropdown").value;
+      const usage = document.querySelector('input[name="usage"]:checked').value;
+      
+      // Add Data to Table
+      const row = `
+        <tr>
+          <td>${productCode}</td>
+          <td>${productName}</td>
+          <td>${productDescription}</td>
+          <td>${pricePerMeter}</td>
+          <td>${productTypeValue}</td>
+          <td>${unitTypeValue}</td>
+          <td>${priceDropdown}</td>
+          <td>${usage}</td>
+        </tr>
+      `;
+      dataTable.insertAdjacentHTML("beforeend", row);
+      
+      // Reset Form After Submission
+      productForm.reset();
+      unitType.disabled = true;
+    });
+
+    // Cancel Button Action
+    document.getElementById("cancelButton").addEventListener("click", () => {
+      productForm.reset();
+      unitType.disabled = true;
+    });
+  </script>
+</body>
+</html>
