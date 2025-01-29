@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalStorage Example</title>
+</head>
+<body>
+  <h1>User Login</h1>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email"><br><br>
+  
+  <label for="password">Password:</label>
+  <input type="password" id="password"><br><br>
+  
+  <button onclick="saveData()">Submit</button>
+
+  <h2>Stored Data:</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody id="dataTable">
+      <!-- Table rows will be inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    // Function to save data to localStorage and display in table
+    function saveData() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      // Save data to localStorage
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
+
+      // Call function to display data in table
+      displayData();
+    }
+
+    // Function to display saved data in table
+    function displayData() {
+      const email = localStorage.getItem("email");
+      const password = localStorage.getItem("password");
+
+      // Add a row to the table with the stored email and password
+      const tableBody = document.getElementById("dataTable");
+      tableBody.innerHTML = ""; // Clear previous rows
+
+      if (email && password) {
+        const row = `<tr>
+                      <td>${email}</td>
+                      <td>${password}</td>
+                    </tr>`;
+        tableBody.innerHTML = row; // Insert the new row
+      }
+    }
+
+    // Load stored data when the page loads
+    window.onload = displayData;
+  </script>
+</body>
+</html>
