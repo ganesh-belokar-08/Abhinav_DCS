@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Example</title>
+    <style>
+        
+    </style>
+    <!--Bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="mb-3">
+            <label for="dropdown1" class="form-label">BEVERAGES</label>
+            <select id="dropdown1" class="form-select">
+                <option value="">--Select--</option>
+                <option value="CHAII">CHAII</option>
+                <option value="COFFEE">COFFEE</option>
+            </select>
+        </div>
+
+        <div id="stuff-container" class="mb-3" style="display: none;">
+            <label for="dropdown2" class="form-label">STUFF</label>
+            <select id="dropdown2" class="form-select">
+                <option value="BREAD">BREAD</option>
+                <option value="BISCUIT">BISCUIT</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS link and Popper.js for Bootstrap's JavaScript components to function -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('dropdown1').addEventListener('change', function() {
+            let stuffContainer = document.getElementById('stuff-container');
+            let selectedValue = this.value;
+            
+            
+            if (selectedValue === "COFFEE") {
+                stuffContainer.style.display = "block";
+            } else {
+                stuffContainer.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
